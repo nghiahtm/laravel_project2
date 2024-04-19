@@ -22,3 +22,5 @@ yarn-error.log
 .idea/codeception.xml
 .idea/php.xml
 .idea/phpspec.xml
+node_modules/
+vendor/
