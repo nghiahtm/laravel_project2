@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
 
 class StoreOrdersRequest extends FormRequest
 {
@@ -22,10 +24,20 @@ class StoreOrdersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "fullName" =>"required|max:255",
-            "address" =>"required|max:255",
+            "fullName" =>"required|max:255|min:4",
+            "address" =>"required|max:255|min:4",
             "phone_number" =>"required|max:12|min:10",
             "products" =>"max:3",
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $exception = $validator->getException();
+        $responseError = new Response([
+            "errors"=> $validator->errors(),
+            "status"=>Response::HTTP_UNPROCESSABLE_ENTITY
+        ],Response::HTTP_UNPROCESSABLE_ENTITY);
+        throw (new $exception($validator,$responseError));
     }
 }

@@ -15,19 +15,22 @@ class CartUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $cartsProduct = collect();
+        $cartProducts = collect();
         if(empty($this->products)){
-            $cartsProduct = [];
+            $cartProducts = [];
         }else{
             foreach (array_keys($this->products) as $id){
-                $cartsProduct->push(new ProductsCartResource(Product::find($id)));
+                $product = new ProductsCartResource(Product::find($id));
+                $product->quantity =$this->products[$id];
+                $cartProducts->push($product);
             }
         }
         return [
             "fullName"=> $this->fullName,
+            "id_user"=> $this->id,
             "phone_number"=> $this->phoneNumber,
             "address"=> $this->address,
-            "products"=> $cartsProduct,
+            "products"=> $cartProducts,
             "statusOrder" => $this->status,
         ];
     }

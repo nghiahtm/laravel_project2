@@ -35,3 +35,5 @@ Route::middleware(["auth:api"])->group( function () {
     Route::post('v1/update', [AuthenticationController::class,"updateUser"]);
 });
 
+Route::get("v1/detail_order",[OrdersController::class,"getDetailOrder"]);
+

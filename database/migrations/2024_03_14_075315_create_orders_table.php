@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("phone_number",12);
             $table->integer("id_user")->nullable();
             $table->json("products_cart")->nullable();
-            $table->enum("status_order",["0","1","2","3","4","5"])->nullable();
+            $table->enum("status_order",["0","1","2","3","4","5"])->default("0");
             $table->id();
             $table->timestamps();
         });
