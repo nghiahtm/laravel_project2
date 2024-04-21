@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers\api\V1;
 
+use App\Exceptions\InvalidOrderException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreOrdersRequest;
 use App\Http\Requests\UpdateOrdersRequest;
+use App\Http\Resources\V1\OrdersCollection;
 use App\Http\Resources\V1\ProductsCartResource;
 use App\Http\Resources\V1\UserOrderResource;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
+use Mockery\Exception;
+use Throwable;
 
 class OrdersController extends Controller
 {
@@ -21,8 +27,11 @@ class OrdersController extends Controller
         if (!$user) {
             return  $this->sentErrorResponse("unauthorized",401);
         }
-        $orders = Order::all();
-        return $this->sentSuccessResponse($orders);
+        if($user->roles === "1"){
+            $orders = Order::paginate(10);
+            return $this->sentSuccessResponse(new OrdersCollection(Order::paginate(10)));
+        }
+        return  $this->sentErrorResponse("Account not admin");
     }
     public function getDetailOrder()
     {
@@ -92,14 +101,24 @@ class OrdersController extends Controller
      */
     public function update(UpdateOrdersRequest $request, Order $orders)
     {
-        //
+        $user = auth()->user();
+        if (!$user) {
+            return  $this->sentErrorResponse("unauthorized",401);
+        }
+        return $this->sentSuccessResponse("updated successfully");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $orders)
+    public function destroy(Order $order)
     {
-        //
+            $user = auth()->user();
+            if (!$user) {
+                return  $this->sentErrorResponse("unauthorized",401);
+            }
+            $order->delete();
+            return $this->sentSuccessResponse("delete successfully");
+
     }
 }

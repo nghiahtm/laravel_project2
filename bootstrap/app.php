@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -29,5 +29,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], $e->getCode());
             }
             return $request->expectsJson();
+        });
+        $exceptions->respond(function (Response $response) {
+            if ($response->getStatusCode() === 500) {
+                return response()->json(['message' =>"Not Found",], 500);
+            }
+            return $response;
         });
     })->create();
