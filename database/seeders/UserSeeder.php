@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             "password" => "admin",
             'image' => "cai d gi",
-            'phone_number' => "69696969696"
+            'phone_number' => "69696969696",
+            'roles' => '1'
         ]);
         User::factory(10)->create();
     }
