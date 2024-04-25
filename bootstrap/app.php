@@ -30,10 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return $request->expectsJson();
         });
-        $exceptions->respond(function (Response $response) {
-            if ($response->getStatusCode() === 500) {
-                return response()->json(['message' =>"Not Found",], 500);
-            }
-            return $response;
-        });
+//        $exceptions->respond(function (Response $response) {
+//            if ($response->getStatusCode() === 500) {
+//                return response()->json(['message' =>"Not Found",], 500);
+//            }
+//            return $response;
+//        });
     })->create();

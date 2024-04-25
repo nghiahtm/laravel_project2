@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\api\V1;
-
-use App\Exceptions\InvalidOrderException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreOrdersRequest;
 use App\Http\Requests\UpdateOrdersRequest;
@@ -11,10 +9,6 @@ use App\Http\Resources\V1\ProductsCartResource;
 use App\Http\Resources\V1\UserOrderResource;
 use App\Models\Order;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use InvalidArgumentException;
-use Mockery\Exception;
-use Throwable;
 
 class OrdersController extends Controller
 {
@@ -29,7 +23,7 @@ class OrdersController extends Controller
         }
         if($user->roles === "1"){
             $orders = Order::paginate(10);
-            return $this->sentSuccessResponse(new OrdersCollection(Order::paginate(10)));
+            return $this->sentSuccessResponse(new OrdersCollection($orders));
         }
         return  $this->sentErrorResponse("Account not admin");
     }
@@ -59,6 +53,11 @@ class OrdersController extends Controller
         if (!$user) {
             return  $this->sentErrorResponse("unauthorized",401);
         }
+        $ordersUser = Order::where("id_user","=",$user->id)->get();
+        $isEmpty = empty($ordersUser->where("status_order","=",0)->first());
+        if(!$isEmpty){
+            return $this->sentErrorResponse("You need remove order before or payment",422);
+        }
         $request->all();
         $order = new Order;
         $order->full_name = $request->fullName;
@@ -71,13 +70,18 @@ class OrdersController extends Controller
             $cartProducts = [];
         }else{
             foreach (array_keys($request->products) as $id){
-                $product = new ProductsCartResource(Product::find($id));
-                $product->quantity =$request->products[$id];
-                $cartProducts->push($product);
+                $product = Product::findOrFail($id);
+                if(empty($product)){
+                   break;
+                }else{
+                    $productRes = new ProductsCartResource($product);
+                    $product->quantity =$request->products[$id];
+                    $cartProducts->push($product);
+                }
             }
         }
         $order->products_cart = json_encode($cartProducts);
-        $order->save();
+       // $order->save();
         return $this->sentSuccessResponse("add successfully");
     }
 
