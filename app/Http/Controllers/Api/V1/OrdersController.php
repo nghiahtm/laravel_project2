@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreOrdersRequest;
-use App\Http\Requests\UpdateOrdersRequest;
+use App\Http\Requests\Api\V1\UpdateOrdersRequest;
 use App\Http\Resources\V1\OrdersCollection;
 use App\Http\Resources\V1\ProductsCartResource;
 use App\Http\Resources\V1\UserOrderResource;
@@ -70,14 +70,10 @@ class OrdersController extends Controller
             $cartProducts = [];
         }else{
             foreach (array_keys($request->products) as $id){
-                $product = Product::findOrFail($id);
-                if(empty($product)){
-                   break;
-                }else{
-                    $productRes = new ProductsCartResource($product);
-                    $product->quantity =$request->products[$id];
-                    $cartProducts->push($product);
-                }
+                $productID = Product::findOrFail($id);
+                $product = new ProductsCartResource($productID);
+                $product->quantity =$request->products[$id];
+                $cartProducts->push($product);
             }
         }
         $order->products_cart = json_encode($cartProducts);
@@ -103,13 +99,15 @@ class OrdersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrdersRequest $request, Order $orders)
+    public function update(UpdateOrdersRequest $request, Order $order)
     {
         $user = auth()->user();
-        if (!$user) {
-            return  $this->sentErrorResponse("unauthorized",401);
+        $id = $order->id_user;
+        if($user->id === $id){
+            $order->update();
+            return $this->sentSuccessResponse($id);
         }
-        return $this->sentSuccessResponse("updated successfully");
+        return $this-> sentErrorResponse("Order is not for you",404);
     }
 
     /**

@@ -54,9 +54,6 @@ class AuthenticationController extends Controller
     public function getUser()
     {
         $user = auth()->user();
-        if (!$user) {
-            return  $this->sentErrorResponse("unauthorized",401);
-        }
         $userRes = new UserDetailResource($user);
 
         return $this->sentSuccessResponse($userRes);
