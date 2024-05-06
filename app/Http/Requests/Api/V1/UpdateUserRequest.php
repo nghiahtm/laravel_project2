@@ -26,10 +26,10 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' =>'required|string|between:8,100',
-            "email"=>"min:8|max:255|email|unique:users",
+            "email"=>"min:8|max:255|email|unique:users,email,$this->id",
             "address"=>"max:500",
-            "roles"=> Rule::in(['0', '1']),
-            "genders"=> Rule::in(['0', '1',"2"]),
+//            "roles"=> Rule::in(['0', '1']),
+            "genders"=> Rule::in(['0','1',"2"]),
         ];
     }
     protected function failedValidation(Validator $validator)
