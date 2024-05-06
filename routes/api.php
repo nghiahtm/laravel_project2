@@ -17,7 +17,6 @@ Route::group(['prefix'=> 'v1'],function (){
     Route::apiResource("products",ProductController::class);
     Route::apiResource("manufacturers",ManufacturersController::class);
     Route::apiResource("auth",AuthenticationController::class);
-    Route::apiResource("orders",OrdersController::class);
 });
 
 Route::group([
@@ -29,11 +28,12 @@ Route::group([
     Route::post('register', [AuthenticationController::class,"register"]);
 });
 
-Route::middleware([AuthMiddleware::class])->group( function () {
-    Route::post('v1/logout', [AuthenticationController::class,"logout"]);
-    Route::post('v1/upload_avatar', [UploadImageController::class,"imageUpload"]);
-    Route::get('v1/user', [AuthenticationController::class,"getUser"]);
-    Route::post('v1/update', [AuthenticationController::class,"updateUser"]);
+Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class]], function () {
+    Route::post('logout', [AuthenticationController::class,"logout"]);
+    Route::post('upload_avatar', [UploadImageController::class,"imageUpload"]);
+    Route::get('user', [AuthenticationController::class,"getUser"]);
+    Route::post('update', [AuthenticationController::class,"updateUser"]);
+    Route::apiResource("orders",OrdersController::class);
 });
 
 Route::get("v1/detail_order",[OrdersController::class,"getDetailOrder"]);

@@ -9,6 +9,7 @@ use App\Http\Resources\V1\ProductsCartResource;
 use App\Http\Resources\V1\UserOrderResource;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Foundation\Http\FormRequest;
 
 class OrdersController extends Controller
 {
@@ -60,24 +61,9 @@ class OrdersController extends Controller
         }
         $request->all();
         $order = new Order;
-        $order->full_name = $request->fullName;
-        $order->address = $request->address;
-        $order->phone_number = $request->phone_number;
-        $order->status_order = "0";
+        $this->updateForm($request,$order);
         $order->id_user =  $user->id;
-        $cartProducts = collect();
-        if(empty($request->products)){
-            $cartProducts = [];
-        }else{
-            foreach (array_keys($request->products) as $id){
-                $productID = Product::findOrFail($id);
-                $product = new ProductsCartResource($productID);
-                $product->quantity =$request->products[$id];
-                $cartProducts->push($product);
-            }
-        }
-        $order->products_cart = json_encode($cartProducts);
-       // $order->save();
+        $order->save();
         return $this->sentSuccessResponse("add successfully");
     }
 
@@ -95,7 +81,25 @@ class OrdersController extends Controller
     {
         //
     }
-
+    private function updateForm(FormRequest $form, Order $order)
+    {
+        $order->full_name = $form->fullName;
+        $order->address = $form->address;
+        $order->phone_number = $form->phone_number;
+        $order->status_order = "0";
+        $cartProducts = collect();
+        if(empty($request->products)){
+            $cartProducts = [];
+        }else{
+            foreach (array_keys($request->products) as $id){
+                $productID = Product::findOrFail($id);
+                $product = new ProductsCartResource($productID);
+                $product->quantity =$request->products[$id];
+                $cartProducts->push($product);
+            }
+        }
+        $order->products_cart = json_encode($cartProducts);
+    }
     /**
      * Update the specified resource in storage.
      */
@@ -104,8 +108,10 @@ class OrdersController extends Controller
         $user = auth()->user();
         $id = $order->id_user;
         if($user->id === $id){
+            $this->updateForm($request,$order);
+            $order->id_user =  $user->id;
             $order->update();
-            return $this->sentSuccessResponse($id);
+            return $this->sentSuccessResponse("Updated order successfully");
         }
         return $this-> sentErrorResponse("Order is not for you",404);
     }
