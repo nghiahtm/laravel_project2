@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Resources\V1;
+namespace App\Http\Resources\Api\V1;
 
 use App\Models\Manufacturers;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ManufacturerResource extends JsonResource
+class ProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,14 +15,18 @@ class ManufacturerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $products = Product::where("products.manufacturer_id",$this->id)->count();
+        $manufacturers = Manufacturers::all();
+        $manufacturer = $manufacturers->find($this->manufacturer_id);
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "image" => $this->web_image,
+            "image" => $this->image,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
-           "count_products"=> $products
+            "description" => $this->description,
+            "quantity" => $this->quantity,
+            "price" => $this->price,
+            "manufacturer" => new ManufacturerResource($manufacturer)
         ];
     }
 }

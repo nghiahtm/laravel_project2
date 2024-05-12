@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Resources\V1;
+namespace App\Http\Resources\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class OrdersCollection extends ResourceCollection
+class ProductCollection extends ResourceCollection
 {
     /**
-     * Transform the resource into an array.
+     * Transform the resource collection into an array.
      *
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function toArray(Request $request): array
     {
         return [
-            'pagination_data' => UserOrderResource::collection($this->collection),
+            'pagination_data' => ProductResource::collection($this->collection),
             "current_page" => $this->currentPage(),
             "first_page_url" =>  $this->getOptions()['path'].'?'.$this->getOptions()['pageName'].'=1',
             "prev_page_url" =>  $this->previousPageUrl(),
