@@ -19,9 +19,6 @@ class OrdersController extends Controller
     public function index()
     {
         $user = auth()->user();
-        if (!$user) {
-            return  $this->sentErrorResponse("unauthorized",401);
-        }
         if($user->roles === "1"){
             $orders = Order::paginate(10);
             return $this->sentSuccessResponse(new OrdersCollection($orders));
@@ -51,9 +48,6 @@ class OrdersController extends Controller
     public function store(StoreOrdersRequest $request)
     {
         $user = auth()->user();
-        if (!$user) {
-            return  $this->sentErrorResponse("unauthorized",401);
-        }
         $ordersUser = Order::where("id_user","=",$user->id)->get();
         $isEmpty = empty($ordersUser->where("status_order","=",0)->first());
         if(!$isEmpty){
@@ -121,10 +115,6 @@ class OrdersController extends Controller
      */
     public function destroy(Order $order)
     {
-            $user = auth()->user();
-            if (!$user) {
-                return  $this->sentErrorResponse("unauthorized",401);
-            }
             $order->delete();
             return $this->sentSuccessResponse("delete successfully");
 
