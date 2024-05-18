@@ -33,6 +33,9 @@ class CartController extends Controller
             if(!$productID->exists()){
                 return $this->sentErrorResponse("ID: $id not exists in product");
             }
+            if($request->products[$id] <= 0){
+                break;
+            }
             $product = new ProductsCartResource($productID);
             $product->quantity =$request->products[$id];
             $cartProducts->push($product);
