@@ -9,6 +9,7 @@ use \App\Http\Controllers\Api\V1\DashboardController;
 use \App\Http\Controllers\API\V1\CartController;
 use \App\Http\Middleware\API\V1\AuthMiddleware;
 use \App\Http\Middleware\API\V1\StatusCodeMiddleware;
+use \App\Http\Middleware\API\V1\NotFoundMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +39,8 @@ Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMidd
     Route::post('update', [AuthenticationController::class,"updateUser"]);
     Route::get('dash_board', [DashboardController::class,"getInformationDashBoard"]);
     Route::apiResource("orders",OrdersController::class);
-    Route::apiResource("carts",CartController::class);
+    Route::apiResource("carts",CartController::class);//->middleware([NotFoundMiddleware::class]);
+    Route::post("carts",[CartController::class,"removeProducts"]);//->middleware([NotFoundMiddleware::class]);
 });
 
 Route::get("v1/detail_order",[OrdersController::class,"getDetailOrder"]);
