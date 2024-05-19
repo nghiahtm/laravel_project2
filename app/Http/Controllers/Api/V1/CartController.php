@@ -19,8 +19,10 @@ class CartController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $cart =  Carts::where("id_user",$user->id)->paginate(10);
-        return $this->sentSuccessResponse(new CartsCollection($cart));
+        $cart =  Carts::where("id_user",$user->id)
+            ->where("hidden", false)
+            ->first();
+        return $this->sentSuccessResponse($cart);
     }
     private function cartCollection($request)
     {

@@ -27,7 +27,6 @@ class UpdateOrdersRequest extends FormRequest
             "fullName" =>"required|max:255|min:4",
             "address" =>"required|max:255|min:4",
             "phone_number" =>"required|max:12|min:10",
-            "products" =>"max:3",
         ];
     }
     protected function failedValidation(Validator $validator)

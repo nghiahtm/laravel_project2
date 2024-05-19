@@ -7,6 +7,7 @@ use App\Http\Requests\Api\V1\UpdateOrdersRequest;
 use App\Http\Resources\Api\V1\OrdersCollection;
 use App\Http\Resources\Api\V1\ProductsCartResource;
 use App\Http\Resources\Api\V1\UserOrderResource;
+use App\Models\Carts;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
@@ -48,16 +49,17 @@ class OrdersController extends Controller
     public function store(StoreOrdersRequest $request)
     {
         $user = auth()->user();
-        $ordersUser = Order::where("id_user","=",$user->id)->get();
-        $isEmpty = empty($ordersUser->where("status_order","=",0)->first());
-        if(!$isEmpty){
-            return $this->sentErrorResponse("You need remove order before or payment",422);
-        }
         $request->all();
         $order = new Order;
         $this->updateForm($request,$order);
         $order->id_user =  $user->id;
+        $cartSelected = Carts::findOrFail($request->id_cart);
+        if($cartSelected->hidden){
+            return  $this->sentErrorResponse("Cart is used before",404);
+        }
+        $cartSelected->hidden = true;
         $order->save();
+        $cartSelected->update();
         return $this->sentSuccessResponse("add successfully");
     }
 
@@ -80,19 +82,10 @@ class OrdersController extends Controller
         $order->full_name = $form->fullName;
         $order->address = $form->address;
         $order->phone_number = $form->phone_number;
-        $order->status_order = "0";
-        $cartProducts = collect();
-        if(empty($request->products)){
-            $cartProducts = [];
-        }else{
-            foreach (array_keys($request->products) as $id){
-                $productID = Product::findOrFail($id);
-                $product = new ProductsCartResource($productID);
-                $product->quantity =$request->products[$id];
-                $cartProducts->push($product);
-            }
-        }
-        $order->products_cart = json_encode($cartProducts);
+        $order->status_order = "1";
+        $carts = Carts::findOrFail($form->id_cart);
+        $productsToOrder = $carts->products;
+        $order->products_cart = json_encode($productsToOrder);
     }
     /**
      * Update the specified resource in storage.

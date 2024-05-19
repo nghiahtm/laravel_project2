@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->integer("id_user");
             $table->json("products");
+            $table->boolean("hidden")->default(false);
         });
     }
 
