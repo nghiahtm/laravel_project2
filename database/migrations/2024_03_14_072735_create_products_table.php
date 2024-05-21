@@ -14,12 +14,19 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->integer("price")->nullable();
-            $table->integer("quantity")->nullable();
-            $table->string("image")->nullable();
-            $table->timestamps();
             $table->integer("manufacturer_id")->nullable();
-            $table->text("description")->nullable();
+            $table->string("image_url")->nullable();
+            $table->float("selling_price")->nullable();
+            $table->float("original_price")->nullable();
+            $table->string("processor")->nullable();
+            $table->string("ram")->nullable();
+            $table->string("os")->nullable();
+            $table->string("storage")->nullable();
+            $table->float("display")->nullable();
+            $table->integer("reviews")->nullable();
+//            $table->integer("quantity")->nullable();
+//            $table->text("description")->nullable();
+//            $table->timestamps();
         });
     }
 
