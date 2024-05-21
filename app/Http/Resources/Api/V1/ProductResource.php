@@ -25,6 +25,11 @@ class ProductResource extends JsonResource
             "updatedAt" => $this->updated_at,
             "description" => $this->description,
             "quantity" => $this->quantity,
+            "os"=> $this->os,
+            "ram"=> $this->ram,
+            "storage"=> $this->storage,
+            "display"=> $this->display_in_inch,
+            "processor"=> $this->processor,
             "price" => $this->price,
             "manufacturer" => new ManufacturerResource($manufacturer)
         ];
