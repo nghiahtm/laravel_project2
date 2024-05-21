@@ -28,7 +28,7 @@ class ProductResource extends JsonResource
             "os"=> $this->os,
             "ram"=> $this->ram,
             "storage"=> $this->storage,
-            "display"=> $this->display_in_inch,
+            "display"=> $this->display,
             "processor"=> $this->processor,
             "selling_price" => $this->selling_price,
             "original_price" => $this->original_price,
