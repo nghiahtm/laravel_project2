@@ -24,13 +24,14 @@ class CartController extends Controller
             ->first();
         return $this->sentSuccessResponse($cart);
     }
-    private function cartCollection($request)
+    private function cartCollection(Request $request)
     {
         $cartProducts = collect();
         if(empty($request->products)){
             return $cartProducts;
         }
-        foreach (array_keys($request->products) as $id){
+        $products = collect($request->products);
+        foreach ($products->keys() as $id){
             $productID = Product::where("id",$id)->first();
             if(!$productID->exists()){
                 return $this->sentErrorResponse("ID: $id not exists in product");
@@ -42,7 +43,7 @@ class CartController extends Controller
             $product->quantity =$request->products[$id];
             $cartProducts->push($product);
         }
-        return  $cartProducts;
+        return $cartProducts;
     }
     /**
      * Store a newly created resource in storage.
