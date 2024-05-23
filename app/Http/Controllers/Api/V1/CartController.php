@@ -108,7 +108,7 @@ class CartController extends Controller
         $cartProducts = $this->cartUpdate($request,$cart);
         $cart->products = json_encode($cartProducts);
         $cart->update();
-        return $this->sentSuccessResponse($cartProducts);
+        return $this->sentSuccessResponse("update successfully");
     }
 
     /**
