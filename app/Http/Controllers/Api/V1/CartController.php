@@ -107,7 +107,7 @@ class CartController extends Controller
         $cart = Carts::where("id",$id)->first();
         $cartProducts = $this->cartUpdate($request,$cart);
         $cart->products = json_encode($cartProducts);
-//        $cart->update();
+        $cart->update();
         return $this->sentSuccessResponse($cartProducts);
     }
 
