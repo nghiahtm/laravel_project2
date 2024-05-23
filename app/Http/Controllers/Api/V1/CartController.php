@@ -21,6 +21,7 @@ class CartController extends Controller
         $user = auth()->user();
         $cart =  Carts::where("id_user",$user->id)
             ->where("hidden", false)
+            ->orWhere("hidden",null)
             ->first();
         return $this->sentSuccessResponse($cart);
     }
@@ -45,6 +46,30 @@ class CartController extends Controller
         }
         return $cartProducts;
     }
+    private function cartUpdate(Request $request,Carts $cart)
+    {
+        $productsRequest = json_decode($cart->products,true);
+        $cartProducts = collect($productsRequest);
+        if(empty($request->products)){
+            return $cartProducts;
+        }
+        $changeProducts = collect($request->products);
+        $idRequest = $changeProducts->keys()->first();
+        $findProductInCart = $cartProducts->where("id",$idRequest);
+        if($findProductInCart->isNotEmpty()){
+            $cartProducts = array_map(function ($item) use ($idRequest,$changeProducts) {
+                if ($item["id"] == $idRequest) {
+                    $item["quantity"] +=  $changeProducts[$idRequest];
+                }
+                return $item;
+            }, $productsRequest);
+        }else{
+            $newProduct = $this->cartCollection($request)->first();
+            $cartProducts->push($newProduct) ;
+        }
+        return $cartProducts;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -73,11 +98,17 @@ class CartController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(empty($request->products)){
+            return $this->sentErrorResponse("Request products is not empty",401);
+        }
+        if(count($request->products)>1){
+            return $this->sentErrorResponse("Too much request products",401);
+        }
         $cart = Carts::where("id",$id)->first();
-        $cartProducts = $this->cartCollection($request);
+        $cartProducts = $this->cartUpdate($request,$cart);
         $cart->products = json_encode($cartProducts);
-        $cart->update();
-        return $this->sentSuccessResponse("update successfully");
+//        $cart->update();
+        return $this->sentSuccessResponse($cartProducts);
     }
 
     /**
@@ -90,13 +121,4 @@ class CartController extends Controller
         return $this->sentSuccessResponse("delete successfully");
     }
 
-    public function removeProducts(Request $request)
-    {
-        $request->all();
-        $cart = Carts::where("id",$request->id)->first();
-        $cartProducts = $this->cartCollection($request);
-        $cart->products = json_encode($cartProducts);
-        $cart->update();
-        return $this->sentSuccessResponse("delete successfully");
-    }
 }
