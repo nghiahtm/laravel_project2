@@ -23,7 +23,7 @@ class ProductsCartResource extends JsonResource
             "image" => $this->image_url,
             "price" => $this->selling_price,
             "quantity" => $this->quantity,
-            "manufacturer"=>$manufacturer->web_image
+            "manufacturer"=>$manufacturer->name
         ];
     }
 }
