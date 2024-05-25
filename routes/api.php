@@ -9,7 +9,7 @@ use \App\Http\Controllers\Api\V1\DashboardController;
 use \App\Http\Controllers\API\V1\CartController;
 use \App\Http\Middleware\API\V1\AuthMiddleware;
 use \App\Http\Middleware\API\V1\StatusCodeMiddleware;
-use \App\Http\Middleware\API\V1\NotFoundMiddleware;
+use \App\Http\Middleware\API\V1\AdminMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,5 +43,7 @@ Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMidd
     Route::post("carts/{id}",[CartController::class,"removeProduct"]);
 });
 
-Route::get("v1/detail_order",[OrdersController::class,"getDetailOrder"]);
+Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMiddleware::class,AdminMiddleware::class]], function () {
+
+});
 

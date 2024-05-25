@@ -21,6 +21,7 @@ class UserOrderResource extends JsonResource
             'phone_number' => $this->phone_number,
             'address' => $this->address,
             'id' => $this->id,
+            'total_bill' => $this->total_bill,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

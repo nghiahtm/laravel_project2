@@ -5,11 +5,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreOrdersRequest;
 use App\Http\Requests\Api\V1\UpdateOrdersRequest;
 use App\Http\Resources\Api\V1\OrdersCollection;
-use App\Http\Resources\Api\V1\ProductsCartResource;
-use App\Http\Resources\Api\V1\UserOrderResource;
 use App\Models\Carts;
 use App\Models\Order;
-use App\Models\Product;
+use http\Env\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrdersController extends Controller
@@ -20,20 +18,15 @@ class OrdersController extends Controller
     public function index()
     {
         $user = auth()->user();
-        if($user->roles === "1"){
-            $orders = Order::paginate(10);
+            $orders =  Order::where("id_user",$user->id)->paginate(10);
             return $this->sentSuccessResponse(new OrdersCollection($orders));
-        }
-        return  $this->sentErrorResponse("Account not admin");
+//        return  $this->sentErrorResponse("Account not admin");
     }
-    public function getDetailOrder()
+    public function getDetailOrder(Request $request)
     {
         $user = auth()->user();
-        if (!$user) {
-            return  $this->sentErrorResponse("unauthorized",401);
-        }
         $orders = Order::where("id_user",$user->id)->first();
-        return $this->sentSuccessResponse(new UserOrderResource($orders));
+        return $this->sentSuccessResponse($request);
     }
     /**
      * Show the form for creating a new resource.
@@ -55,7 +48,7 @@ class OrdersController extends Controller
         $order->id_user =  $user->id;
         $cartSelected = Carts::findOrFail($request->id_cart);
         if($cartSelected->hidden){
-            return  $this->sentErrorResponse("Cart is used before",404);
+            return  $this->sentSuccessResponse("Cart is used before",200);
         }
         $cartSelected->hidden = true;
         $order->save();
@@ -66,8 +59,11 @@ class OrdersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $orders)
+    public function show(Order $order)
     {
+        $user = auth()->user();
+        $orders = Order::where("id_user",$user->id)->where("id",$order->id)->first();
+        return $this->sentSuccessResponse($orders);
     }
 
     /**
@@ -82,6 +78,7 @@ class OrdersController extends Controller
         $order->full_name = $form->fullName;
         $order->address = $form->address;
         $order->phone_number = $form->phone_number;
+        $order->total_bill = $form->total_bill;
         $order->status_order = "1";
         $carts = Carts::findOrFail($form->id_cart);
         $productsToOrder = $carts->products;
@@ -100,7 +97,7 @@ class OrdersController extends Controller
             $order->update();
             return $this->sentSuccessResponse("Updated order successfully");
         }
-        return $this-> sentErrorResponse("Order is not for you",404);
+        return $this-> sentSuccessResponse("Order is not for you",);
     }
 
     /**
