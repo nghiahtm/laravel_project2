@@ -21,7 +21,6 @@ class CartController extends Controller
         $user = auth()->user();
         $cart =  Carts::where("id_user",$user->id)
             ->where("hidden", false)
-            ->orWhere("hidden",null)
             ->first();
         return $this->sentSuccessResponse($cart);
     }
@@ -55,7 +54,7 @@ class CartController extends Controller
         }
         $changeProducts = collect($request->products);
         $idRequest = $changeProducts->keys()->first();
-        $findProductInCart = $cartProducts->where("id",$idRequest);
+        $findProductInCart = $cartProducts->where("id",$idRequest)->where("hidden",false);
         if($findProductInCart->isNotEmpty()){
             $cartProducts = array_map(function ($item) use ($idRequest,$changeProducts) {
                 if ($item["id"] == $idRequest) {
@@ -121,4 +120,24 @@ class CartController extends Controller
         return $this->sentSuccessResponse("delete successfully");
     }
 
+    public function removeProduct(string $id,Request $request)
+    {
+        $cart = Carts::where("id",$id)->where("hidden",false)->first();
+        $products = $cart->products;
+        $idProduct = $request->id_product;
+        $parseProducts = json_decode($products,true);
+        if(empty($idProduct)){
+            return $this->sentErrorResponse("No Product need to remove");
+        }
+        if(empty($products)){
+            return $this->sentErrorResponse("No Products need to Remove");
+        }
+        foreach($parseProducts as $key => $value) {
+            if($value['id'] == $idProduct) {
+                unset($parseProducts[$key]);
+            }
+        }
+        $cart->products = json_encode($parseProducts);
+        return $this->sentSuccessResponse($cart);
+    }
 }

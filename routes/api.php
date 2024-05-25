@@ -40,6 +40,7 @@ Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMidd
     Route::get('dash_board', [DashboardController::class,"getInformationDashBoard"]);
     Route::apiResource("orders",OrdersController::class);
     Route::apiResource("carts",CartController::class);//->middleware([NotFoundMiddleware::class]);
+    Route::post("carts/{id}",[CartController::class,"removeProduct"]);
 });
 
 Route::get("v1/detail_order",[OrdersController::class,"getDetailOrder"]);
