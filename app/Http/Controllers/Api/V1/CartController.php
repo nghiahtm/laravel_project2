@@ -138,7 +138,7 @@ class CartController extends Controller
             }
         }
         $cart->products = json_encode($parseProducts);
-        $cart->save();
+        $cart->update();
         return $this->sentSuccessResponse("Product is successfully removed");
     }
 }

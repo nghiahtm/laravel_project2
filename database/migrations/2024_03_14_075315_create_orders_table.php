@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer("id_user")->nullable();
             $table->json("products_cart")->nullable();
             $table->enum("status_order",["0","1","2","3","4","5"])->default("0");
+            $table->float("total_bill")->default("0");
             $table->timestamps();
         });
     }
