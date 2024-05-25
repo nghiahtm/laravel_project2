@@ -138,6 +138,7 @@ class CartController extends Controller
             }
         }
         $cart->products = json_encode($parseProducts);
+        $cart->save();
         return $this->sentSuccessResponse($cart);
     }
 }
