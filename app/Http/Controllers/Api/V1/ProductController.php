@@ -81,10 +81,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->all());
-        return response()->json([
-            "message"=>"update success",
-            "status"=>Response::HTTP_ACCEPTED,
-        ],Response::HTTP_ACCEPTED);
+        return $this->sentSuccessResponse("update success");
     }
 
     /**
