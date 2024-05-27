@@ -34,7 +34,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -42,7 +41,20 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        //
+        $productRequest = $request->all();
+        $product = new Product;
+        $product->name = $productRequest['name'];
+        $product->manufacturer_id = $productRequest['id_manufacturer'];
+        $product->processor = $productRequest['processor'];
+        $product->image_url = $productRequest['image'];
+        $product->os = $productRequest['os'];
+        $product->storage = $productRequest['storage'];
+        $product->ram = $productRequest['ram'];
+        $product->display_in_inch = $productRequest['display'];
+        $product->selling_price = $productRequest['selling_price'];
+        $product->original_price = $productRequest['original_price'];
+        $product->save();
+        return $this->sentSuccessResponse("add success");
     }
 
     /**
@@ -69,10 +81,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->all());
-        return response()->json([
-            "message"=>"update success",
-            "status"=>Response::HTTP_ACCEPTED,
-        ],Response::HTTP_ACCEPTED);
+        return $this->sentSuccessResponse("update success");
     }
 
     /**

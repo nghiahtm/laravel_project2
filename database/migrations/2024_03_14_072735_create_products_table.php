@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer("reviews")->nullable();
 //            $table->integer("quantity")->nullable();
 //            $table->text("description")->nullable();
-//            $table->timestamps();
+//            $table->timestamps(true);
         });
     }
 
