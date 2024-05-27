@@ -22,11 +22,10 @@ class OrdersController extends Controller
             return $this->sentSuccessResponse(new OrdersCollection($orders));
 //        return  $this->sentErrorResponse("Account not admin");
     }
-    public function getDetailOrder(Request $request)
+    public function getAllOrder()
     {
-        $user = auth()->user();
-        $orders = Order::where("id_user",$user->id)->first();
-        return $this->sentSuccessResponse($request);
+        $orders = Order::orderBy("created_at","DESC")->paginate(10);
+        return $this->sentSuccessResponse(new OrdersCollection($orders));
     }
     /**
      * Show the form for creating a new resource.

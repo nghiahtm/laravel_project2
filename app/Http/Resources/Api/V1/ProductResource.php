@@ -32,7 +32,7 @@ class ProductResource extends JsonResource
             "processor"=> $this->processor,
             "selling_price" => $this->selling_price,
             "original_price" => $this->original_price,
-            "manufacturer" => new ManufacturerResource($manufacturer)
+            "manufacturer" => new ManufacturerInProductResource($manufacturer)
         ];
     }
 }

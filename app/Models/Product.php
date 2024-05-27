@@ -9,7 +9,9 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["id","manufacturer_id","name","price","quantity","image","description"];
+    public $timestamps = false;
+    protected $fillable = ["id","manufacturer_id","name","selling_price","image",
+        "ram","display","processor","original_price","display","storage"];
     public  function manufacturers()
     {
         return $this->belongsTo(Manufacturers::class);

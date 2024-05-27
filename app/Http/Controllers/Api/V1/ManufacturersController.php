@@ -41,8 +41,8 @@ class ManufacturersController extends Controller
     public function store(StoreManufacturersRequest $request)
     {
         $manuData = $request->all();
-        $manuResource = new ManufacturerResource(Manufacturers::create($manuData));
-            return $manuResource;
+        new ManufacturerResource(Manufacturers::create($manuData));
+            return $this->sentSuccessResponse("add manufacturer successfully");
     }
 
     /**
