@@ -50,7 +50,7 @@ class ProductController extends Controller
         $product->os = $productRequest['os'];
         $product->storage = $productRequest['storage'];
         $product->ram = $productRequest['ram'];
-        $product->display_in_inch = $productRequest['display'];
+        $product->display = $productRequest['display'];
         $product->selling_price = $productRequest['selling_price'];
         $product->original_price = $productRequest['original_price'];
         $product->save();

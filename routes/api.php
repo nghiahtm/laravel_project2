@@ -1,15 +1,17 @@
 <?php
 
+use App\Http\Controllers\Api\V1\admin\DashboardController;
+use App\Http\Controllers\Api\V1\admin\RevenueController;
 use App\Http\Controllers\Api\V1\AuthenticationController;
+use App\Http\Controllers\API\V1\CartController;
 use App\Http\Controllers\api\V1\ManufacturersController;
+use App\Http\Controllers\api\V1\OrdersController;
 use App\Http\Controllers\api\V1\ProductController;
-use \App\Http\Controllers\Api\V1\UploadImageController;
-use \App\Http\Controllers\api\V1\OrdersController;
-use \App\Http\Controllers\Api\V1\DashboardController;
-use \App\Http\Controllers\API\V1\CartController;
-use \App\Http\Middleware\API\V1\AuthMiddleware;
-use \App\Http\Middleware\API\V1\StatusCodeMiddleware;
-use \App\Http\Middleware\API\V1\AdminMiddleware;
+use App\Http\Controllers\Api\V1\UploadImageController;
+use App\Http\Middleware\API\V1\AdminMiddleware;
+use App\Http\Middleware\API\V1\AuthMiddleware;
+use App\Http\Middleware\API\V1\StatusCodeMiddleware;
+use \App\Http\Controllers\API\V1\Admin\AdminOrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,8 +44,10 @@ Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMidd
     Route::post("carts/{id}",[CartController::class,"removeProduct"]);
 });
 
-Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMiddleware::class,AdminMiddleware::class]], function () {
+Route::group(["prefix"=>"v1/admin/","middleware"=>[AuthMiddleware::class,StatusCodeMiddleware::class,AdminMiddleware::class]], function () {
     Route::get('dash_board', [DashboardController::class,"getInformationDashBoard"]);
-    Route::get('get_all_orders', [OrdersController::class,"getAllOrder"]);
+    Route::get('get_all_orders', [AdminOrderController::class,"getAllOrder"]);
+    Route::get('get_all_revenue', [RevenueController::class,"getAllRevenue"]);
+    Route::post('update_status_order', [AdminOrderController::class,"updateStatusOrder"]);
 });
 

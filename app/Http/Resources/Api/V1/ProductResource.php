@@ -17,6 +17,12 @@ class ProductResource extends JsonResource
     {
         $manufacturers = Manufacturers::all();
         $manufacturer = $manufacturers->find($this->manufacturer_id);
+        if(isset($manufacturer)){
+            $manufacturer = new Manufacturers;
+            $manufacturers->id = 0;
+            $manufacturers->name = $manufacturer;
+            $manufacturers->web_image = "";
+        }
         return [
             "id" => $this->id,
             "name" => $this->name,
@@ -28,7 +34,7 @@ class ProductResource extends JsonResource
             "os"=> $this->os,
             "ram"=> $this->ram,
             "storage"=> $this->storage,
-            "display"=> $this->display_in_inch,
+            "display"=> $this->display,
             "processor"=> $this->processor,
             "selling_price" => $this->selling_price,
             "original_price" => $this->original_price,

@@ -15,7 +15,7 @@ class UserOrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return  [
-            'name' => $this->full_name,
+            'user_name' => $this->full_name,
             'products_cart' => json_decode($this->products_cart),
             'status_order' => $this->status_order,
             'phone_number' => $this->phone_number,
