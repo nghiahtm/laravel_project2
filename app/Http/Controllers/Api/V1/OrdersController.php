@@ -7,7 +7,7 @@ use App\Http\Requests\Api\V1\UpdateOrdersRequest;
 use App\Http\Resources\Api\V1\OrdersCollection;
 use App\Models\Carts;
 use App\Models\Order;
-use http\Env\Request;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OrdersController extends Controller
@@ -22,11 +22,7 @@ class OrdersController extends Controller
             return $this->sentSuccessResponse(new OrdersCollection($orders));
 //        return  $this->sentErrorResponse("Account not admin");
     }
-    public function getAllOrder()
-    {
-        $orders = Order::orderBy("created_at","DESC")->paginate(10);
-        return $this->sentSuccessResponse(new OrdersCollection($orders));
-    }
+
     /**
      * Show the form for creating a new resource.
      */

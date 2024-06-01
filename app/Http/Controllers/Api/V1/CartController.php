@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\CartResource;
-use App\Http\Resources\Api\V1\CartsCollection;
 use App\Http\Resources\Api\V1\ProductsCartResource;
 use App\Models\Carts;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class CartController extends Controller
 {

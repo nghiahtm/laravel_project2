@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\V1\DashboardResource;
 use App\Models\Manufacturers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {

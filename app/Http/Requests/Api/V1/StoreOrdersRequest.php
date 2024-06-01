@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\V1;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class StoreOrdersRequest extends FormRequest
 {
@@ -28,6 +29,7 @@ class StoreOrdersRequest extends FormRequest
             "address" =>"required|max:255|min:4",
             "phone_number" =>"required|max:12|min:10",
             "products" =>"max:3",
+            "status_order"=> Rule::in(['0','1',"2","3","4","5"])
         ];
     }
 
