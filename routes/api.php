@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\admin\DashboardController;
+use App\Http\Controllers\API\V1\admin\InformationUserController;
 use App\Http\Controllers\Api\V1\admin\RevenueController;
 use App\Http\Controllers\Api\V1\AuthenticationController;
 use App\Http\Controllers\API\V1\CartController;
@@ -49,5 +50,7 @@ Route::group(["prefix"=>"v1/admin/","middleware"=>[AuthMiddleware::class,StatusC
     Route::get('get_all_orders', [AdminOrderController::class,"getAllOrder"]);
     Route::get('get_all_revenue', [RevenueController::class,"getAllRevenue"]);
     Route::post('update_status_order', [AdminOrderController::class,"updateStatusOrder"]);
+    Route::get('get_all_users', [InformationUserController::class,"getAllUser"]);
+    Route::post('get_detail_user', [InformationUserController::class,"getDetailUser"]);
 });
 
