@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     public $timestamps = false;
-    protected $fillable = ["id","manufacturer_id","name","selling_price","image",
+    protected $fillable = ["id","manufacturer_id","name","selling_price","image_url",
         "ram","display","processor","original_price","display","storage"];
     public  function manufacturers()
     {

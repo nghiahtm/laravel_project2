@@ -9,7 +9,6 @@ use App\Http\Resources\Api\V1\ProductCollection;
 use App\Http\Resources\Api\V1\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
