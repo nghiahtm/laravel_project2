@@ -17,7 +17,7 @@ class ProductResource extends JsonResource
     {
         $manufacturers = Manufacturers::all();
         $manufacturer = $manufacturers->find($this->manufacturer_id);
-        if(isset($manufacturer)){
+        if(!isset($manufacturer)){
             $manufacturer = new Manufacturers;
             $manufacturers->id = 0;
             $manufacturers->name = $manufacturer;
