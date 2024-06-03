@@ -79,6 +79,8 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $requestAll = $request->all();
+        $product->image_url = $requestAll["image"];
         $product->update($request->all());
         return $this->sentSuccessResponse("update success");
     }
