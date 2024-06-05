@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\API\V1\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Admin\AdminUpdateStatusRequest;
 use App\Http\Resources\API\V1\admin\AdminUserCollection;
 use App\Http\Resources\Api\V1\ProductCollection;
 use App\Http\Resources\Api\V1\UserDetailResource;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class InformationUserController extends Controller
 {
@@ -40,6 +42,17 @@ class InformationUserController extends Controller
         $user= User::where("id",$id)->first();
         return $this->sentSuccessResponse(
             $user
+        );
+    }
+
+    public function updateRoleUser(AdminUpdateStatusRequest $request,string $id)
+    {
+        $role = $request["role"];
+        $user= User::where("id",$id)->first();
+        $user->roles = $role;
+        $user->update();
+        return $this->sentSuccessResponse(
+            "update status success"
         );
     }
 }
