@@ -41,7 +41,7 @@ class InformationUserController extends Controller
         }
         $user= User::where("id",$id)->first();
         return $this->sentSuccessResponse(
-            $user
+            new UserDetailResource($user)
         );
     }
 
