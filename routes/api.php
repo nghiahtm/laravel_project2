@@ -52,5 +52,6 @@ Route::group(["prefix"=>"v1/admin/","middleware"=>[AuthMiddleware::class,StatusC
     Route::post('update_status_order', [AdminOrderController::class,"updateStatusOrder"]);
     Route::get('get_all_users', [InformationUserController::class,"getAllUser"]);
     Route::post('get_detail_user', [InformationUserController::class,"getDetailUser"]);
+    Route::put("user/{id}", [InformationUserController::class,"updateRoleUser"]);
 });
 
