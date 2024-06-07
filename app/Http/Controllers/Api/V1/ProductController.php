@@ -15,15 +15,22 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->get('perPage');
+        $search = $request->get('search');
         $manufacturer = $request->get('id_manufacturer');
         if(empty($perPage)){
             $perPage = 10;
         }
-        if(empty($manufacturer)){
-            $products = new ProductCollection(Product::paginate($perPage));
-        }else{
-            $products = new ProductCollection(Product::where("products.manufacturer_id",$manufacturer)->paginate($perPage));
-        }
+        $resultProducts = Product::
+        Where("products.manufacturer_id",$manufacturer)
+            ->orWhere("name",'like',"%$search%")
+            ->paginate($perPage);
+        $products = new ProductCollection($resultProducts);
+//        if(empty($manufacturer)){
+//            $products = new ProductCollection(Product::paginate($perPage));
+//        }
+//        else{
+//            $products = new ProductCollection(Product::where("products.manufacturer_id",$manufacturer)->paginate($perPage));
+//        }
         return $this->sentSuccessResponse(
             $products
         );
