@@ -24,14 +24,4 @@ class RevenueController extends Controller
         });
         return $this->sentSuccessResponse($allMonths);
     }
-
-    private function calculateOrdersForYear($years)
-    {
-        for ($i = 1; $i < 12; $i++){
-            $orders = Order::
-            whereYear('updated_at', $years)
-                ->whereMonth('updated_at', $i)->get();
-
-        }
-    }
 }
