@@ -30,16 +30,16 @@ class UserOrderResource extends JsonResource
     private function checkStatus($status)
     {
         switch ($status) {
-            case 1:
+            case "1":
             default :
                 return 'Pending';
-            case 2:
+            case "2":
                 return "Delivering";
-            case 3:
+            case "3":
                 return "Delivered";
-            case 4:
+            case "4":
                 return "Success";
-            case 5:
+            case "5":
                 return "Canceled";
         }
     }
