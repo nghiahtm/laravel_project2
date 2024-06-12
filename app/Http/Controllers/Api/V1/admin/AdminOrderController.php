@@ -31,7 +31,7 @@ class AdminOrderController extends Controller
         $id = $request["id"];
         $status = $request["status"];
         if(!isset($status)){
-            $status = 0;
+            $status = "0";
         }
         $order =  Order::where("id",$id)
             ->first();
@@ -39,4 +39,5 @@ class AdminOrderController extends Controller
         $order->update();
         return $this->sentSuccessResponse("Update Status Successfully");
     }
+
 }

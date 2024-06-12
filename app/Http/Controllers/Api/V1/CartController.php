@@ -16,11 +16,17 @@ class CartController extends Controller
      */
     public function index()
     {
+        $cart = $this->isCartHidden(true);
+        return $this->sentSuccessResponse($cart);
+    }
+
+    private function isCartHidden(bool $isHidden)
+    {
         $user = auth()->user();
         $cart =  Carts::where("id_user",$user->id)
-            ->where("hidden", false)
+            ->where("hidden", $isHidden)
             ->first();
-        return $this->sentSuccessResponse($cart);
+        return  $cart;
     }
     private function cartCollection(Request $request)
     {
@@ -72,11 +78,16 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
+        $cart = $this->isCartHidden(false);
+        if(isset($cart)){
+            return $this->sentSuccessResponse("have an active shopping cart");
+        }
         $user = auth()->user();
         $cart = new Carts;
         $cartProducts = $this->cartCollection($request);
         $cart->products = json_encode($cartProducts);
         $cart->id_user = $user->id;
+        $cart->hidden = false;
         $cart->save();
         return $this->sentSuccessResponse("Successfully");
     }
@@ -102,6 +113,9 @@ class CartController extends Controller
             return $this->sentErrorResponse("Too much request products",401);
         }
         $cart = Carts::where("id",$id)->first();
+        if($cart->hidden) {
+            return $this->sentSuccessResponse("cart is not active");
+        }
         $cartProducts = $this->cartUpdate($request,$cart);
         $cart->products = json_encode($cartProducts);
         $cart->update();

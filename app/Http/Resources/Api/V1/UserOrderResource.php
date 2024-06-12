@@ -17,7 +17,7 @@ class UserOrderResource extends JsonResource
         return  [
             'user_name' => $this->full_name,
             'products_cart' => json_decode($this->products_cart),
-            'status_order' => $this->status_order,
+            'status_order' => $this->checkStatus($this->status_order),
             'phone_number' => $this->phone_number,
             'address' => $this->address,
             'id' => $this->id,
@@ -25,5 +25,22 @@ class UserOrderResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+    }
+
+    private function checkStatus($status)
+    {
+        switch ($status) {
+            case "1":
+            default :
+                return 'Pending';
+            case "2":
+                return "Delivering";
+            case "3":
+                return "Delivered";
+            case "4":
+                return "Success";
+            case "5":
+                return "Canceled";
+        }
     }
 }
