@@ -43,6 +43,8 @@ Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMidd
     Route::apiResource("orders",OrdersController::class);
     Route::apiResource("carts",CartController::class);//->middleware([NotFoundMiddleware::class]);
     Route::post("carts/{id}",[CartController::class,"removeProduct"]);
+    Route::post("orders/confirm",[OrdersController::class,"confirmOrder"]);
+    Route::post("orders/cancel",[OrdersController::class,"cancelOrder"]);
 });
 
 Route::group(["prefix"=>"v1/admin/","middleware"=>[AuthMiddleware::class,StatusCodeMiddleware::class,AdminMiddleware::class]], function () {

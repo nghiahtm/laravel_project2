@@ -16,7 +16,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = $this->isCartHidden(true);
+        $cart = $this->isCartHidden(false);
         return $this->sentSuccessResponse($cart);
     }
 
