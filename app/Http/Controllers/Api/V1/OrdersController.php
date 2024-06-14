@@ -133,11 +133,11 @@ class OrdersController extends Controller
         $id = $request['id'];
         $user = auth()->user();
         $order = Order::where("id_user",$user->id)->where("id",$id)->first();
-        if($order->status_orders == "1"){
-            $order->status_orders = "5";
+        if($order["status_order"] == "1"){
+            $order["status_order"] = "5";
             $order->save();
             return $this->sentSuccessResponse("cancel successfully");
         }
-        return  $this->sentErrorResponse("cancel confirm");
+        return  $this->sentErrorResponse("can't cancel");
     }
 }
