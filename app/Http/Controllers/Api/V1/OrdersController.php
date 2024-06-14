@@ -15,10 +15,20 @@ class OrdersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $reqStatus = $request["status"];
         $user = auth()->user();
-            $orders =  Order::where("id_user",$user->id)->paginate(10);
+        if(!isset($reqStatus)){
+            $orders =  Order::where("id_user",$user->id)
+                ->orderByDesc("created_at")
+                ->paginate(10);
+            return $this->sentSuccessResponse(new OrdersCollection($orders));
+        }
+            $orders =  Order::where("id_user",$user->id)
+                ->where("status_order",$reqStatus)
+                ->orderByDesc("created_at")
+                ->paginate(10);
             return $this->sentSuccessResponse(new OrdersCollection($orders));
 //        return  $this->sentErrorResponse("Account not admin");
     }
@@ -103,5 +113,31 @@ class OrdersController extends Controller
             $order->delete();
             return $this->sentSuccessResponse("delete successfully");
 
+    }
+
+    public function confirmOrder(Request $request)
+    {
+        $id = $request['id'];
+        $user = auth()->user();
+        $order = Order::where("id_user",$user->id)->where("id",$id)->first();
+        if($order["status_order"] == "3"){
+            $order["status_order"] = "4";
+            $order->save();
+            return $this->sentSuccessResponse("Confirm successfully");
+        }
+        return  $this->sentErrorResponse("Cant confirm");
+    }
+
+    public function cancelOrder(Request $request)
+    {
+        $id = $request['id'];
+        $user = auth()->user();
+        $order = Order::where("id_user",$user->id)->where("id",$id)->first();
+        if($order->status_orders == "1"){
+            $order->status_orders = "5";
+            $order->save();
+            return $this->sentSuccessResponse("cancel successfully");
+        }
+        return  $this->sentErrorResponse("cancel confirm");
     }
 }
