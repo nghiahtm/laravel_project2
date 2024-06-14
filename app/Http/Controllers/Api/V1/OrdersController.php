@@ -138,6 +138,6 @@ class OrdersController extends Controller
             $order->save();
             return $this->sentSuccessResponse("cancel successfully");
         }
-        return  $this->sentErrorResponse("cancel confirm");
+        return  $this->sentErrorResponse("can't cancel");
     }
 }
