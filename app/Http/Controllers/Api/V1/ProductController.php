@@ -15,22 +15,25 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->get('perPage');
-        $search = $request->get('search');
-        $manufacturer = $request->get('id_manufacturer');
-        if(empty($perPage)){
-            $perPage = 10;
-        }
-        $resultProducts = Product::
-        Where("products.manufacturer_id",$manufacturer)
-            ->orWhere("name",'like',"%$search%")
-            ->paginate($perPage);
-        $products = new ProductCollection($resultProducts);
-//        if(empty($manufacturer)){
-//            $products = new ProductCollection(Product::paginate($perPage));
-//        }
-//        else{
-//            $products = new ProductCollection(Product::where("products.manufacturer_id",$manufacturer)->paginate($perPage));
-//        }
+        $query = Product::query();
+
+        // Thêm điều kiện tìm kiếm dựa trên query param
+        $query->when($request->input('search'), function ($q, $name) {
+            return $q->where('name', 'like', "%{$name}%");
+        });
+
+        $query->when($request->input('price_min'), function ($q, $priceMin) {
+            return $q->where('price', '>=', $priceMin);
+        });
+
+        $query->when($request->input('price_max'), function ($q, $priceMax) {
+            return $q->where('price', '<=', $priceMax);
+        });
+
+        $query->when($request->input('id_manufacturer'), function ($q, $id) {
+            return $q->where('manufacturer_id', $id);
+        });
+        $products =  new ProductCollection($query->paginate($perPage));
         return $this->sentSuccessResponse(
             $products
         );
