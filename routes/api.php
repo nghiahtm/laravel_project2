@@ -39,6 +39,7 @@ Route::group(["prefix"=>"v1","middleware"=>[AuthMiddleware::class,StatusCodeMidd
     Route::post('logout', [AuthenticationController::class,"logout"]);
     Route::post('upload_avatar', [UploadImageController::class,"imageUpload"]);
     Route::get('user', [AuthenticationController::class,"getUser"]);
+    Route::post('user/change-password', [AuthenticationController::class,"changePassword"]);
     Route::post('update', [AuthenticationController::class,"updateUser"]);
     Route::apiResource("orders",OrdersController::class);
     Route::apiResource("carts",CartController::class);//->middleware([NotFoundMiddleware::class]);

@@ -23,11 +23,11 @@ class ProductController extends Controller
         });
 
         $query->when($request->input('price_min'), function ($q, $priceMin) {
-            return $q->where('price', '>=', $priceMin);
+            return $q->where('selling_price', '>=', $priceMin);
         });
 
         $query->when($request->input('price_max'), function ($q, $priceMax) {
-            return $q->where('price', '<=', $priceMax);
+            return $q->where('selling_price', '<=', $priceMax);
         });
 
         $query->when($request->input('id_manufacturer'), function ($q, $id) {
